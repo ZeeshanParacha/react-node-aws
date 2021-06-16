@@ -1,0 +1,10 @@
+npm init -y
+npm install --save next react react-dom
+npm install --save nprogress
+
+add scripts to package.json,
+ "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
