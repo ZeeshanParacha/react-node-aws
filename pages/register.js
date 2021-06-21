@@ -19,7 +19,6 @@ const Register = () => {
     };
 
     const handleSubmit = e => {
-        console.log('tatti')
         e.preventDefault();
         axios.post('http://localhost:8000/api/register', {
             name,
