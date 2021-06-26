@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import Layout from '../components/Layout';
-import axios from 'axios';
+import { successAlert, errorAlert } from "../helpers/alert";
+import { Post } from "../helpers/api-functions";
 
 const Register = () => {
     const [state, setState] = useState({
-        name: '',
-        email: '',
-        password: '',
+        name: 'Ryan',
+        email: 'ryan@gmail.com',
+        password: '123456',
         error: '',
         success: '',
         buttonText: 'Register'
@@ -17,17 +18,28 @@ const Register = () => {
     const handleChange = name => e => {
         setState({ ...state, [name]: e.target.value, error: '', success: '', buttonText: 'Register' });
     };
-
-    const handleSubmit = e => {
+    const handleSubmit = async e => {
         e.preventDefault();
-        axios.post('http://localhost:8000/api/register', {
-            name,
-            email,
-            password
-        })
-            .then(response => console.log(response))
-            .catch(error => console.log(error))
-    };
+        setState({ ...state, buttonText: "Registering..." })
+        try {
+            const response = await Post('/register', {
+                name,
+                email,
+                password
+            })
+            setState({
+                ...state,
+                name: "",
+                email: "",
+                password: "",
+                buttonText: "Submitted",
+                success: response.data.message
+            })
+        }
+        catch (error) {
+            setState({ ...state, buttonText: "Register", error: error.response.data.error })
+        }
+    }
 
     const registerForm = () => (
         <form onSubmit={handleSubmit}>
@@ -38,6 +50,7 @@ const Register = () => {
                     type="text"
                     className="form-control"
                     placeholder="Type your name"
+                    required
                 />
             </div>
             <div className="form-group">
@@ -47,6 +60,7 @@ const Register = () => {
                     type="email"
                     className="form-control"
                     placeholder="Type your email"
+                    required
                 />
             </div>
             <div className="form-group">
@@ -56,6 +70,7 @@ const Register = () => {
                     type="password"
                     className="form-control"
                     placeholder="Type your password"
+                    required
                 />
             </div>
             <div className="form-group">
@@ -69,6 +84,8 @@ const Register = () => {
             <div className="col-md-6 offset-md-3">
                 <h1>Register</h1>
                 <br />
+                {success && successAlert(success)}
+                {error && errorAlert(error)}
                 {registerForm()}
                 <hr />
                 {JSON.stringify(state)}
