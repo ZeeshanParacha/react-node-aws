@@ -1,6 +1,7 @@
 npm init -y
 npm install --save next react react-dom
 npm install --save nprogress
+npm install jsonwebtoken
 
 add scripts to package.json,
  "scripts": {
